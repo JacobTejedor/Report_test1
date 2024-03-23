@@ -3,35 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chart.js with Generated Data</title>
+  <title>Radar Chart Example</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <canvas id="myChart" width="400" height="400"></canvas>
+  <!-- No canvas element in HTML -->
 
   <script>
-    // Function to generate sample data
-    function generateData() {
-      return Array.from({ length: DATA_COUNT }, () => Math.floor(Math.random() * 100));
-    }
-
-    // Additional code
     const DATA_COUNT = 7;
     Utils.srand(110);
 
-    const actions = [
-      {
-        name: 'Randomize',
-        handler(chart) {
-          chart.data.datasets.forEach(dataset => {
-            dataset.data = generateData();
-          });
-          chart.update();
-        }
-      },
-    ];
+    // Function to generate random data
+    function generateData() {
+      return Utils.numbers({
+        count: DATA_COUNT,
+        min: 0,
+        max: 100
+      });
+    }
 
-    // Generate data and create Chart.js data object
+    // Configuration options and data for the radar chart
     const data = {
       labels: [['Eating', 'Dinner'], ['Drinking', 'Water'], 'Sleeping', ['Designing', 'Graphics'], 'Coding', 'Cycling', 'Running'],
       datasets: [{
@@ -39,12 +30,24 @@
       }]
     };
 
-    // Create the chart
-    const ctx = document.getElementById('myChart').getContext('2d');
-    const myChart = new Chart(ctx, {
-      type: 'bar',
-      data: data
-    });
-  </script>
-</body>
-</html>
+    function getLineColor(ctx) {
+      return Utils.color(ctx.datasetIndex);
+    }
+
+    function alternatePointStyles(ctx) {
+      const index = ctx.dataIndex;
+      return index % 2 === 0 ? 'circle' : 'rect';
+    }
+
+    function makeHalfAsOpaque(ctx) {
+      return Utils.transparentize(getLineColor(ctx));
+    }
+
+    function make20PercentOpaque(ctx) {
+      return Utils.transparentize(getLineColor(ctx), 0.8);
+    }
+
+    function adjustRadiusBasedOnData(ctx) {
+      const v = ctx.parsed.y;
+      return v < 10 ? 5
+        : v <
