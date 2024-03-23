@@ -12,24 +12,9 @@
   <script>
     // Function to generate sample data
     function generateData() {
-      return Array.from({ length: DATA_COUNT }, () => Math.floor(Math.random() * 100));
+      const DATA_COUNT = 7; // Number of data points
+      return Array.from({ length: DATA_COUNT }, () => Math.floor(Math.random() * 100)); // Generate random data
     }
-
-    // Additional code
-    const DATA_COUNT = 7;
-    Utils.srand(110);
-
-    const actions = [
-      {
-        name: 'Randomize',
-        handler(chart) {
-          chart.data.datasets.forEach(dataset => {
-            dataset.data = generateData();
-          });
-          chart.update();
-        }
-      },
-    ];
 
     // Generate data and create Chart.js data object
     const data = {
@@ -42,7 +27,7 @@
     // Create the chart
     const ctx = document.getElementById('myChart').getContext('2d');
     const myChart = new Chart(ctx, {
-      type: 'bar',
+      type: 'bar', // Change the chart type as needed
       data: data
     });
   </script>
